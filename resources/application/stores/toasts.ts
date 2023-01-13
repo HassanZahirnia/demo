@@ -24,8 +24,8 @@ export const useToastsStore = defineStore('toastStore', () => {
 				showCloseButtonOnHover: false,
 				hideProgressBar: false,
 				closeButton: 'button',
+				rtl: true,
 			})
-			pull(item)
 		}
 	}
 	function pull(item: App.Data.Notification.ToastData) {
@@ -40,28 +40,16 @@ export const useToastsStore = defineStore('toastStore', () => {
 })
 
 export const setupToasts = () => {
-	const unregisterHook = registerHook('navigated', ({ isBackForward }: { isBackForward: boolean }) => {
-		if (!isBackForward) {
-			useToasts()
-		}
-	})
-
-	onMounted(() => {
-		useToasts()
-	})
-
-	onUnmounted(() => {
-		unregisterHook()
-	})
+	useToasts()
 }
 
 function useToasts() {
-	const toastsStore = useToastsStore()
 	const toasts = useTypedProperty<App.Data.Notification.ToastData[]>('toasts')
 
-	if (toasts.value?.length) {
+	watch(toasts, () => {
+		const toastsStore = useToastsStore()
 		each(toasts.value, (item: App.Data.Notification.ToastData) => {
 			toastsStore.push(item)
 		})
-	}
+	}, { immediate: true })
 }
