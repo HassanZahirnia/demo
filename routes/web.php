@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\Like;
 use App\Http\Controllers\Profile;
+use App\Support\Toast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +28,27 @@ Route::delete('/chirps/{chirp}', [ChirpController::class, 'destroy'])->name('chi
 Route::get('/users/{user}', Profile\ShowChirpsController::class)->name('users.show');
 Route::get('/users/{user}/comments', Profile\ShowCommentsController::class)->name('users.show-comments');
 Route::get('/users/{user}/likes', Profile\ShowLikesController::class)->name('users.show-likes');
+
+/*
+|--------------------------------------------------------------------------
+| Toasts Demo
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/toasts', function () {
+    return hybridly('toasts.index');
+})->name('toasts.index');
+
+Route::get('/toasts/other', function () {
+    return hybridly('toasts.other');
+})->name('toasts.other');
+
+Route::get('/toasts/success', function () {
+    $toast = new Toast();
+    $toast
+        ->message('Here is a success toast message.')
+        ->success()
+        ->show();
+
+    return to_route('toasts.index');
+})->name('toasts.success');

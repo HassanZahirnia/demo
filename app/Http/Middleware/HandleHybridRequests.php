@@ -18,6 +18,7 @@ class HandleHybridRequests extends Middleware
                 'user' => UserData::optional(auth()->user()),
                 'characters' => config('chirp.characters'),
             ],
+            'toasts' => request()->session()->get('toasts'),
         ]);
     }
 }
